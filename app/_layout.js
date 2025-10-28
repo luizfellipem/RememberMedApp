@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { RemindersProvider } from '../src/context/RemindersContext';
 
 export default function RootLayout() {
   return (

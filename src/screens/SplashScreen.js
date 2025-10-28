@@ -2,38 +2,35 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import { COLORS } from '../styles/theme';
+
+// Definição de cores para o tema da tela de splash
+const COLORS = {
+  TEAL: '#00A896', // Verde-água vibrante
+  WHITE: '#FFFFFF',
+};
 
 export default function SplashScreen() {
   const navigation = useNavigation();
 
-  // Função para navegar para a tela de Login após 2 segundos
+  // Navega para a tela de Login após 2 segundos
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('Login');
-    }, 2000); // 2 segundos
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [navigation]);
 
   return (
     <View style={styles.container}>
-      {/* Garante que o ícone de status (hora, bateria) seja branco no fundo escuro */}
-      <StatusBar barStyle="light-content" backgroundColor={COLORS.PRIMARY} /> 
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.TEAL} />
       
-      {/* Ícone de Cruz/Mais */}
       <View style={styles.iconContainer}>
-        <Ionicons name="add" size={48} color={COLORS.PRIMARY} />
+        <Ionicons name="add" size={60} color={COLORS.WHITE} />
       </View>
 
-      {/* Título Principal */}
       <Text style={styles.title}>REMEMBER</Text>
       <Text style={styles.title}>MED</Text>
-      
-      {/* Ícone de Plus na parte inferior (baseado no design) */}
-      <View style={styles.bottomIconContainer}>
-        <Ionicons name="add-circle" size={32} color={COLORS.WHITE} />
-      </View>
     </View>
   );
 }
@@ -41,30 +38,24 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.PRIMARY,
+    backgroundColor: COLORS.TEAL,
     justifyContent: 'center',
     alignItems: 'center',
   },
   iconContainer: {
-    backgroundColor: COLORS.WHITE,
-    borderRadius: 50,
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
+    backgroundColor: 'transparent', // O quadrado é da mesma cor do fundo
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
+    // A cruz está "dentro" do quadrado, então não precisa de bordas extras
   },
   title: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: 'bold',
     color: COLORS.WHITE,
-    letterSpacing: 2,
-    marginTop: -10,
-  },
-  bottomIconContainer: {
-    position: 'absolute',
-    bottom: 50,
-    left: 40,
+    letterSpacing: 1.5,
+    lineHeight: 35, // Ajuste para aproximar as linhas
   },
 });
-

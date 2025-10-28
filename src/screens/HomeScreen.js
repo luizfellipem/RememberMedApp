@@ -1,5 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -8,28 +10,50 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import ProfileHeader from '../components/ProfileHeader';
+import ReminderDetailsModal from '../components/ReminderDetailsModal';
+import { useReminders } from '../context/RemindersContext';
 import { COLORS, SPACING } from '../styles/theme';
 
-import { useReminders } from '../context/RemindersContext';
-
-// ... (código existente)
+const ReminderItem = ({ item, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <View style={styles.reminderItem}>
+      <Text style={styles.reminderText}>{item.name}</Text>
+    </View>
+  </TouchableOpacity>
+);
 
 export default function HomeScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { reminders } = useReminders();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedReminder, setSelectedReminder] = useState(null);
+
+  const handleReminderPress = (reminder) => {
+    setSelectedReminder(reminder);
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedReminder(null);
+  };
+
+  const handleLogout = () => {
+    navigation.replace('Login');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-          <Text style={styles.greetingText}>Olá, Usuário!</Text>
-          <Text style={styles.headerTitle}>Minhas receitas</Text>
-      </View>
+      <ProfileHeader userEmail="zilmar@example.com" onLogout={handleLogout} />
       
       <FlatList
         data={reminders}
-        renderItem={({ item }) => <ReminderItem item={item} />}
+        renderItem={({ item }) => <ReminderItem item={item} onPress={() => handleReminderPress(item)} />}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContent}
+        ListHeaderComponent={() => <Text style={styles.headerTitle}>Minhas receitas</Text>}
       />
 
       <TouchableOpacity 
@@ -38,6 +62,12 @@ export default function HomeScreen() {
       >
         <Ionicons name="add" size={30} color={COLORS.WHITE} />
       </TouchableOpacity>
+
+      <ReminderDetailsModal 
+        reminder={selectedReminder} 
+        visible={modalVisible} 
+        onClose={handleCloseModal} 
+      />
     </SafeAreaView>
   );
 }
@@ -47,28 +77,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.LIGHT_GREY, // Fundo levemente cinza
   },
-  header: {
-    padding: SPACING.LARGE,
-    paddingTop: 0, 
-    backgroundColor: COLORS.WHITE,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
-    marginBottom: SPACING.MEDIUM,
-    shadowColor: COLORS.BLACK,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  greetingText: {
-      fontSize: 14,
-      color: COLORS.GREY,
-      marginBottom: SPACING.SMALL / 2,
-  },
   headerTitle: {
       fontSize: 24,
       fontWeight: 'bold',
       color: COLORS.BLACK,
+      paddingHorizontal: SPACING.LARGE,
+      marginBottom: SPACING.MEDIUM,
   },
   listContent: {
     paddingHorizontal: SPACING.LARGE,
@@ -89,5 +103,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
+  },
+  reminderItem: {
+    backgroundColor: COLORS.WHITE,
+    padding: SPACING.MEDIUM,
+    borderRadius: 10,
+    marginBottom: SPACING.MEDIUM,
+    shadowColor: COLORS.BLACK,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  reminderText: {
+    fontSize: 16,
+    color: COLORS.BLACK,
   },
 });

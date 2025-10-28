@@ -1,18 +1,18 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useReminders } from '../context/RemindersContext';
 import { COLORS, SPACING } from '../styles/theme';
 
 export default function ReminderFormScreen() {
   const router = useRouter();
+  const { addReminder } = useReminders();
   const [medicationName, setMedicationName] = useState('');
   const [dose, setDose] = useState('');
   const [frequency, setFrequency] = useState('');
 
   const handleSave = () => {
-    console.log('Medicamento:', medicationName);
-    console.log('Dose:', dose);
-    console.log('Frequência:', frequency);
+    addReminder({ name: medicationName, dose, frequency });
     router.back();
   };
 
@@ -117,6 +117,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-
- 

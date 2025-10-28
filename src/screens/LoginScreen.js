@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import {
@@ -12,20 +11,21 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import Group1 from '../../assets/images/Group 1.svg';
 import { COLORS, SPACING } from '../styles/theme';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
   // Função para simular o login e navegar para Home
   const handleLogin = () => {
     // Apenas para simulação, navega direto para Home
-    if (email && password) {
-       navigation.replace('Home');
+    if (username && password) {
+       navigation.replace('Home', { username });
     } else {
-       Alert.alert("Erro", "Preencha e-mail e senha para simular o login.");
+       Alert.alert("Erro", "Preencha usuário e senha para simular o login.");
     }
   };
 
@@ -38,23 +38,20 @@ export default function LoginScreen() {
 
       <View style={styles.logoArea}>
         {/* Logo/Ícone do App */}
-        <View style={styles.iconContainer}>
-          <Ionicons name="add" size={36} color={COLORS.PRIMARY} />
-        </View>
+        <Group1 width={80} height={80} />
         <Text style={styles.logoText}>REMEMBER MED</Text>
       </View>
 
       <View style={styles.formArea}>
         <Text style={styles.title}>Faça login para acessar suas receitas</Text>
         
-        {/* Campo E-mail */}
+        {/* Campo Usuário */}
         <TextInput
           style={styles.input}
-          placeholder="email@dominio.com"
+          placeholder="Usuário"
           placeholderTextColor={COLORS.GREY}
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
+          value={username}
+          onChangeText={setUsername}
         />
 
         {/* Campo Senha */}
@@ -95,14 +92,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     paddingBottom: SPACING.XLARGE * 2,
-  },
-  iconContainer: {
-    backgroundColor: COLORS.LIGHT_GREY,
-    borderRadius: 50,
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   logoText: {
     fontSize: 20,
