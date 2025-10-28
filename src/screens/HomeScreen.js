@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -26,6 +26,9 @@ const ReminderItem = ({ item, onPress }) => (
 export default function HomeScreen() {
   const router = useRouter();
   const navigation = useNavigation();
+  const route = useRoute();
+  // Lê o nome de usuário passado via params pelo LoginScreen. Se não houver, usa 'Usuário' como padrão.
+  const { username = 'Usuário' } = route.params ?? {};
   const { reminders } = useReminders();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedReminder, setSelectedReminder] = useState(null);
@@ -46,7 +49,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ProfileHeader userEmail="zilmar@example.com" onLogout={handleLogout} />
+      <ProfileHeader userEmail={username} onLogout={handleLogout} />
       
       <FlatList
         data={reminders}
