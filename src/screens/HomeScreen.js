@@ -3,12 +3,13 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
+  Alert,
   FlatList,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import ProfileHeader from '../components/ProfileHeader';
 import ReminderDetailsModal from '../components/ReminderDetailsModal';
@@ -16,11 +17,11 @@ import { useReminders } from '../context/RemindersContext';
 import { COLORS, SPACING } from '../styles/theme';
 
 const ReminderItem = ({ item, onPress }) => (
-  <TouchableOpacity onPress={onPress}>
-    <View style={styles.reminderItem}>
+  <View style={styles.reminderItemContainer}>
+    <TouchableOpacity style={styles.reminderItemTouchable} onPress={onPress}>
       <Text style={styles.reminderText}>{item.name}</Text>
-    </View>
-  </TouchableOpacity>
+    </TouchableOpacity>
+  </View>
 );
 
 export default function HomeScreen() {
@@ -47,13 +48,17 @@ export default function HomeScreen() {
     navigation.replace('Login');
   };
 
+
+
   return (
     <SafeAreaView style={styles.container}>
       <ProfileHeader userEmail={username} onLogout={handleLogout} />
       
       <FlatList
         data={reminders}
-        renderItem={({ item }) => <ReminderItem item={item} onPress={() => handleReminderPress(item)} />}
+        renderItem={({ item }) => (
+          <ReminderItem item={item} onPress={() => handleReminderPress(item)} />
+        )}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={() => <Text style={styles.headerTitle}>Minhas receitas</Text>}
@@ -69,7 +74,7 @@ export default function HomeScreen() {
       <ReminderDetailsModal 
         reminder={selectedReminder} 
         visible={modalVisible} 
-        onClose={handleCloseModal} 
+        onClose={handleCloseModal}
       />
     </SafeAreaView>
   );
@@ -107,6 +112,22 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
   },
+  reminderItemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.WHITE,
+    borderRadius: 10,
+    marginBottom: SPACING.MEDIUM,
+    shadowColor: COLORS.BLACK,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  reminderItemTouchable: {
+    flex: 1,
+    padding: SPACING.MEDIUM,
+  },
   reminderItem: {
     backgroundColor: COLORS.WHITE,
     padding: SPACING.MEDIUM,
@@ -121,5 +142,9 @@ const styles = StyleSheet.create({
   reminderText: {
     fontSize: 16,
     color: COLORS.BLACK,
+  },
+  deleteButton: {
+    padding: SPACING.MEDIUM,
+    marginLeft: SPACING.SMALL,
   },
 });

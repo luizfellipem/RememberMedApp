@@ -22,6 +22,8 @@ export function RemindersProvider({ children }) {
     ]);
   };
 
+
+
   return (
     <RemindersContext.Provider value={{ reminders, addReminder }}>
       {children}
